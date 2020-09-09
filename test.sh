@@ -1,10 +1,28 @@
+#цвета
+#удаление каталога
+echo Размонтирование дисков
+sudo umount /mnt
 copy_dir="/tmp"
+
+delete()
+{
+	echo Вы уверены, что хотите удалить каталог $1 \?
+	echo 1 - Да 
+	echo 2 - Нет 
+	read num
+
+	if test $num = 1
+		then
+		sudo rm -r $1
+	fi
+}
 
 func()
 {
 	cd $1
-	echo Текущий каталог $1
-	ls -la | awk '{if($1~"^d") var="D"; else var="f";if($9) print var" "$9}' | cat -n
+	ls -la | awk '{if($1~"^d") var="34"; else var="0";if($9) print NR-1" \033[" var "m" $9 "\033[0m"}' 
+	#ls -la | awk '{if($1~"^d") var="D"; else var="f";if($9) print var" "$9}' | cat -n
+	echo Текущий каталог $(pwd)
 	echo -e "\033[33mВыберите каталог...\033[0m"
 	read num
 	dir=$(ls -a $1 | cat -n | awk '{if($1==num)print $2}' num=$num)
@@ -12,6 +30,7 @@ func()
 
 	echo 1 - Перейти в каталог
 	echo 2 - Скопировать каталог
+	echo 3 - Удалить каталог
 	read num
 
 	if test $num = 1
@@ -25,8 +44,13 @@ func()
 				else echo Не удалось скопировать каталог
 			fi
 			else
-				echo Неверный выбор
-				func $1
+				if test $num = 3
+				then
+					delete $path
+				else
+					echo Неверный выбор
+					func $1
+				fi
 		fi
 	fi
 }
@@ -65,3 +89,4 @@ func /mnt
 #Отображает смонтированные устройство в разделе
 cd
 sudo umount /mnt
+echo Размонтирование дисков
