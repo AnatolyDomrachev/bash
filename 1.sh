@@ -1,2 +1,10 @@
-echo -e "\033[34mqwerty\033[0m"
-echo -e  "\033[0masdfg\033[0m"
+files=$(ls)
+for file in files
+do
+if test -d $file
+then
+var=34
+else
+var=0
+fi
+

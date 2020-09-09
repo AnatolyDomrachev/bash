@@ -19,14 +19,14 @@ delete()
 
 func()
 {
-	cd $1
-	ls -la | awk '{if($1~"^d") var="34"; else var="0";if($9) print NR-1" \033[" var "m" $9 "\033[0m"}' 
+	cd "$1"
+	ls -la | awk '{if($1~"^d") var="34"; else var="0";if($9) print NR-1" \033[" var "m" $9" " $10 " " $11 " "$12 " " $13 "\033[0m"}' 
 	#ls -la | awk '{if($1~"^d") var="D"; else var="f";if($9) print var" "$9}' | cat -n
 	echo Текущий каталог $(pwd)
 	echo -e "\033[33mВыберите каталог...\033[0m"
 	read num
-	dir=$(ls -a $1 | cat -n | awk '{if($1==num)print $2}' num=$num)
-	path=$1/$dir
+	dir="$(ls -a $1 | cat -n | awk '{if($1==num)print $2" "$3" "$4" "$5" "$6}' num=$num)"
+	path="$1/$dir"
 
 	echo 1 - Перейти в каталог
 	echo 2 - Скопировать каталог
@@ -35,21 +35,21 @@ func()
 
 	if test $num = 1
 		then
-			func $path
+			func "$path"
 		else
 		if test $num = 2
 			then
-			if cp -r $path $copy_dir 
+			if cp -r "$path" $copy_dir 
 				then echo Каталог $dir скопирован в $copy_dir 
 				else echo Не удалось скопировать каталог
 			fi
 			else
 				if test $num = 3
 				then
-					delete $path
+					delete "$path"
 				else
 					echo Неверный выбор
-					func $1
+					func "$1"
 				fi
 		fi
 	fi
