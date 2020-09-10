@@ -21,7 +21,7 @@ func()
 {
 	cd "$1"
 	echo Текущий каталог $(pwd)
-	ls -la | awk '{if($1~"^d") var="34"; else var="0";if($9) printf "%d \033[%dm", NR-1, var ; for(i=9;i<=NF;i++) printf "%s", $i" "; print "\033[0m"}' 
+	ls -la | awk '{if($1~"^d") var="34"; else var="0";if($9) print NR-1" \033[" var "m" $9" " $10 " " $11 " "$12 " " $13 " " $14 " " $15 "\033[0m"}' 
 	#ls -la | awk '{if($1~"^d") var="D"; else var="f";if($9) print var" "$9}' | cat -n
 	echo -e "\033[33mВыберите каталог...\033[0m"
 	read num
