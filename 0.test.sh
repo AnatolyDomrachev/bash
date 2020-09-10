@@ -19,26 +19,28 @@ delete()
 
 func()
 {
-	cd "$1"
+cd "$1"
+TMP=/tmp/$$
+ls -a|egrep -v "^\.$" > $TMP 
 	#ls -la | awk '{if($1~"^d") var="34"; else var="0";if($9) print NR-1" \033[" var "m" $9" " $10 " " $11 " "$12 " " $13 "\033[0m"}' 
 
 num=1
-for file in $(ls -a|awk '{print "\"" $0 "\""}')
+IFS=$'\n'
+for file in $(cat $TMP)
 do
 	if test -d $file
 		then color=34
 		else color=0
 	fi
-	echo -e "$num \033[${color}m $file"
-	echo -en "\033[0m"
-	num=$(echo $num+1|bc)
+	echo -e "$num \033[${color}m $file \033[0m"
+	((num++))
 done
 
 	#ls -la | awk '{if($1~"^d") var="D"; else var="f";if($9) print var" "$9}' | cat -n
 	echo Текущий каталог $(pwd)
 	echo -e "\033[33mВыберите каталог...\033[0m"
 	read num
-	dir="$(ls -a $1 | awk '{if(NR==num)print $0}' num=$num)"
+	dir="$(cat $TMP | awk '{if(NR==num)print $0}' num=$num)"
 	path="$1/$dir"
 
 	echo 1 - Перейти в каталог
