@@ -2,7 +2,31 @@
 #удаление каталога
 echo Размонтирование дисков
 sudo umount /mnt
-copy_dir="/tmp"
+TMP=/tmp/$$
+
+copy()
+{
+	echo "Выберите домашний каталог пользователя"
+	ls /home > $TMP
+
+	num=1
+	for file in $(cat $TMP)
+	do
+		if test -d $file
+			then color=34
+			else color=0
+		fi
+		echo -e "$num \033[${color}m $file \033[0m"
+		((num++))
+	done
+	read num
+	dir="$(cat $TMP | awk '{if(NR==num)print $0}' num=$num)"
+	path="/home/$dir"
+	if cp -r $1 $path
+		then echo Каталог $1 скопирован в /home/$dir
+		else echo Не удалось скопировать каталог
+	fi
+}
 
 delete()
 {
@@ -13,19 +37,34 @@ delete()
 
 	if test $num = 1
 		then
-		sudo rm -r "$1" && echo $1 удалён
+		if sudo rm -r $1
+			then echo Каталог $1 удалён
+			else echo Не удалось удалить каталог
+		fi
 	fi
 }
 
 func()
 {
-	cd "$1"
-	echo Текущий каталог $(pwd)
-	ls -la | awk '{if($1~"^d") var="34"; else var="0";if($9) printf "%d \033[%dm", NR-1, var ; for(i=9;i<=NF;i++) printf "%s", $i" "; print "\033[0m"}' 
-	#ls -la | awk '{if($1~"^d") var="D"; else var="f";if($9) print var" "$9}' | cat -n
+cd "$1"
+echo Текущий каталог $(pwd)
+ls -a|egrep -v "^\.$" > $TMP 
+
+num=1
+IFS=$'\n'
+for file in $(cat $TMP)
+do
+	if test -d $file
+		then color=34
+		else color=0
+	fi
+	echo -e "$num \033[${color}m $file \033[0m"
+	((num++))
+done
+
 	echo -e "\033[33mВыберите каталог...\033[0m"
 	read num
-	dir="$(ls -a $1 | awk '{if(NR==num)print $0}' num=$num)"
+	dir="$(cat $TMP | awk '{if(NR==num)print $0}' num=$num)"
 	path="$1/$dir"
 
 	echo 1 - Перейти в каталог
@@ -39,10 +78,7 @@ func()
 		else
 		if test $num = 2
 			then
-			if cp -r "$path" $copy_dir 
-				then echo Каталог $dir скопирован в $copy_dir 
-				else echo Не удалось скопировать каталог
-			fi
+				copy $path
 			else
 				if test $num = 3
 				then
