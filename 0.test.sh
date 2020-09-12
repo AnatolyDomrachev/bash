@@ -20,9 +20,9 @@ delete()
 func()
 {
 cd "$1"
+echo Текущий каталог $(pwd)
 TMP=/tmp/$$
 ls -a|egrep -v "^\.$" > $TMP 
-	#ls -la | awk '{if($1~"^d") var="34"; else var="0";if($9) print NR-1" \033[" var "m" $9" " $10 " " $11 " "$12 " " $13 "\033[0m"}' 
 
 num=1
 IFS=$'\n'
@@ -36,8 +36,6 @@ do
 	((num++))
 done
 
-	#ls -la | awk '{if($1~"^d") var="D"; else var="f";if($9) print var" "$9}' | cat -n
-	echo Текущий каталог $(pwd)
 	echo -e "\033[33mВыберите каталог...\033[0m"
 	read num
 	dir="$(cat $TMP | awk '{if(NR==num)print $0}' num=$num)"
