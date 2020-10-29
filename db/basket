@@ -1,0 +1,2 @@
+create table basket (id_basket int , ORDER_ID int , PRODUCT_ID int , DATE_INSERT datetime , QUANTITY int , price float , NAME char(50))
+10210056;1234491;1060973;01.01.2016 0:34:25;1,0;"539,000";"Huppa Варежки Liina, цвет: серый"
