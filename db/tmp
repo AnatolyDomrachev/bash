@@ -1,0 +1,2 @@
+adom@ubuntu:~/bash/db$ mysql -u root -e "LOAD DATA LOCAL INFILE 'basket16-17-1' INTO TABLE basket FIELDS TERMINATED BY ';' LINES TERMINATED BY '\r\n' (id_basket , ORDER_ID , PRODUCT_ID , @DATE_INSERT , QUANTITY , price , NAME) SET DATE_INSERT = STR_TO_DATE(@DATE_INSERT,'%d-%m-%Y %k:%i:%s')" bash -p1111
+
